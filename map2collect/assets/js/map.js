@@ -439,7 +439,7 @@ Map.drawLines = function() {
                 return item.text === nodeValue.key;
         })[0]; //Need this 0 because its an array with 1 element
 
-        print(parseInt(toolType) < parseInt(marker.tool) && toolType !== "3")
+        console.log(parseInt(toolType) < parseInt(marker.tool) && toolType !== "3")
 
         if (marker.text == nodeValue.key && marker.day == day && !disableMarkers.includes(nodeValue.key) && enabledTypes.includes(marker.icon)) {
             var connection = [marker.x, marker.y];
