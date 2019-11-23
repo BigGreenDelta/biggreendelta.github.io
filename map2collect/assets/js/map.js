@@ -439,6 +439,8 @@ Map.drawLines = function() {
                     return item.text === nodeValue.key;
             })[0]; //Need this 0 because its an array with 1 element
 
+            var toolType = '3'; //All type of tools
+            toolType = $("#tools").val();
             if (marker.text == nodeValue.key && marker.day == day && !disableMarkers.includes(nodeValue.key) && enabledTypes.includes(marker.icon) &&
                 parseInt(toolType) < parseInt(marker.tool) && toolType !== "3")) {
             var connection = [marker.x, marker.y];
