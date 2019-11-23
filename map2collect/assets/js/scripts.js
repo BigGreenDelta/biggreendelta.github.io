@@ -56,20 +56,19 @@ var wikiLanguage = [];
 
 var debugTool = null;
 
-function init()
-{
+function init() {
 
     wikiLanguage['de-de'] = 'https://github.com/jeanropke/RDR2CollectorsMap/wiki/RDO-Sammler-Landkarte-Benutzerhandbuch-(Deutsch)';
     wikiLanguage['en-us'] = 'https://github.com/greedwasgood/greedwasgood.github.io/wiki/RDO-Collector-map-user-guide-(Russian)';
     wikiLanguage['fr-fr'] = 'https://github.com/jeanropke/RDR2CollectorsMap/wiki/RDO-Collectors-Map-Guide-d\'Utilisateur-(French)';
     wikiLanguage['pt-br'] = 'https://github.com/jeanropke/RDR2CollectorsMap/wiki/Guia-do-Usu%C3%A1rio---Mapa-de-Colecionador-(Portuguese)';
-	wikiLanguage['ru'] = 'https://github.com/greedwasgood/greedwasgood.github.io/wiki/RDO-Collector-map-user-guide-(Russian)';
+    wikiLanguage['ru'] = 'https://github.com/greedwasgood/greedwasgood.github.io/wiki/RDO-Collector-map-user-guide-(Russian)';
 
-    if(typeof $.cookie('removed-items') === 'undefined')
-        $.cookie('removed-items', '', {expires: resetMarkersDaily ? 1 : 999});
+    if (typeof $.cookie('removed-items') === 'undefined')
+        $.cookie('removed-items', '', { expires: resetMarkersDaily ? 1 : 999 });
 
-    if(typeof $.cookie('removed-items-2') === 'undefined')
-        $.cookie('removed-items-2', '', {expires: resetMarkersDaily ? 1 : 999});
+    if (typeof $.cookie('removed-items-2') === 'undefined')
+        $.cookie('removed-items-2', '', { expires: resetMarkersDaily ? 1 : 999 });
 
 
     disableMarkers = ($.cookie('removed-items') + $.cookie('removed-items-2')).split(";");
@@ -78,32 +77,31 @@ function init()
         return item !== "random"
     });
 
-    if(typeof $.cookie('map-layer') === 'undefined')
+    if (typeof $.cookie('map-layer') === 'undefined')
         $.cookie('map-layer', 'Detailed', { expires: 999 });
 
-    if(typeof $.cookie('language') === 'undefined')
-    {
-        if(avaliableLanguages.includes(navigator.language.toLowerCase()))
+    if (typeof $.cookie('language') === 'undefined') {
+        if (avaliableLanguages.includes(navigator.language.toLowerCase()))
             $.cookie('language', navigator.language.toLowerCase());
         else
             $.cookie('language', 'en-us');
     }
 
-    if(!avaliableLanguages.includes($.cookie('language')))
+    if (!avaliableLanguages.includes($.cookie('language')))
         $.cookie('language', 'en-us');
 
-    if(typeof $.cookie('removed-markers-daily') === 'undefined')
-        $.cookie('removed-markers-daily', 'false', { expires: 999});
+    if (typeof $.cookie('removed-markers-daily') === 'undefined')
+        $.cookie('removed-markers-daily', 'false', { expires: 999 });
 
     resetMarkersDaily = $.cookie('removed-markers-daily') == 'true';
     $("#reset-markers").val(resetMarkersDaily.toString());
 
     var curDate = new Date();
-    date = curDate.getUTCFullYear()+'-'+(curDate.getUTCMonth()+1)+'-'+curDate.getUTCDate();
+    date = curDate.getUTCFullYear() + '-' + (curDate.getUTCMonth() + 1) + '-' + curDate.getUTCDate();
 
 
 
-    disableMarkers = disableMarkers.filter(function (el) {
+    disableMarkers = disableMarkers.filter(function(el) {
         return el != "";
     });
 
@@ -124,35 +122,37 @@ function init()
     //Overlay tests
     var pos = [-53.2978125, 68.7596875];
     var offset = 1.15;
-    L.imageOverlay('./assets/overlays/cave_01.png', [[pos], [pos[0] + offset, pos[1] + offset]]).addTo(baseMap);
+    L.imageOverlay('./assets/overlays/cave_01.png', [
+        [pos],
+        [pos[0] + offset, pos[1] + offset]
+    ]).addTo(baseMap);
 
 
 
 }
 
-function setMapBackground(mapName){
-    switch(mapName) {
+function setMapBackground(mapName) {
+    switch (mapName) {
         default:
-        case 'Default':
+            case 'Default':
             $('#map').css('background-color', '#d2b790');
-            break;
+        break;
 
         case 'Detailed':
-            $('#map').css('background-color', '#d2b790');
+                $('#map').css('background-color', '#d2b790');
             break;
     }
 
     $.cookie('map-layer', mapName, { expires: 999 });
 }
-function setCurrentDayCycle()
-{
+
+function setCurrentDayCycle() {
     //day1: 2 4 6
     //day2: 0 3
     //day3: 1 5
 
     var weekDay = new Date().getUTCDay();
-    switch(weekDay)
-    {
+    switch (weekDay) {
         case 2: //tuesday
         case 4: //thursday
         case 6: //saturday
@@ -173,20 +173,16 @@ function setCurrentDayCycle()
     $('#day').val(day);
 
     //Cookie day not exists? create
-    if(typeof $.cookie('date') === 'undefined')
-    {
+    if (typeof $.cookie('date') === 'undefined') {
         $.cookie('date', date, { expires: 2 });
     }
     //if exists, remove markers if the days arent the same
-    else
-    {
-        if($.cookie('date') != date.toString())
-        {
+    else {
+        if ($.cookie('date') != date.toString()) {
             $.cookie('date', date, { expires: 2 });
-            if(resetMarkersDaily)
-            {
-                $.cookie('removed-items', '', {expires: 1});
-                $.cookie('removed-items-2', '', {expires: 1});
+            if (resetMarkersDaily) {
+                $.cookie('removed-items', '', { expires: 1 });
+                $.cookie('removed-items-2', '', { expires: 1 });
 
                 disableMarkers = [];
             }
@@ -194,67 +190,65 @@ function setCurrentDayCycle()
     }
 }
 
-function changeCursor()
-{
-    if(showCoordinates || customRouteEnabled)
+function changeCursor() {
+    if (showCoordinates || customRouteEnabled)
         $('.leaflet-grab').css('cursor', 'pointer');
     else
         $('.leaflet-grab').css('cursor', 'grab');
 }
 
-$("#day").on("input", function()
-{
+$("#day").on("input", function() {
     $.cookie('ignore-days', null);
 
     day = $('#day').val();
     Map.addMarkers();
 
-    if($("#routes").val() == 1)
+    if ($("#routes").val() == 1)
         Map.drawLines();
 
 
 });
 
-$("#search").on("input", function()
-{
+$("#search").on("input", function() {
     searchTerms = [];
-    $.each($('#search').val().split(';'), function(key, value)
-    {
-        if($.inArray(value.trim(), searchTerms) == -1)
-        {
-            if(value.length > 0)
+    $.each($('#search').val().split(';'), function(key, value) {
+        if ($.inArray(value.trim(), searchTerms) == -1) {
+            if (value.length > 0)
                 searchTerms.push(value.trim());
         }
     });
     Map.addMarkers(false);
 });
 
-$("#routes").on("change", function()
-{
-    if($("#routes").val() == 0) {
+$("#routes").on("change", function() {
+    if ($("#routes").val() == 0) {
         if (polylines instanceof L.Polyline) {
             baseMap.removeLayer(polylines);
         }
-    }
-    else {
+    } else {
         Map.drawLines();
     }
 });
 
-$("#tools").on("change", function()
-{
+$("#tools").on("change", function() {
     toolType = $("#tools").val();
     Map.addMarkers();
+
+    if ($("#routes").val() == 0) {
+        if (polylines instanceof L.Polyline) {
+            baseMap.removeLayer(polylines);
+        }
+    } else {
+        Map.drawLines();
+    }
 });
 
-$("#reset-markers").on("change", function()
-{
-    if($("#reset-markers").val() == 'clear')
-    {
-        $.cookie('removed-items', '', { expires: resetMarkersDaily ? 1 : 999});
-        $.cookie('removed-items-2', '', { expires: resetMarkersDaily ? 1 : 999});
+$("#reset-markers").on("change", function() {
+    if ($("#reset-markers").val() == 'clear') {
+        $.cookie('removed-items', '', { expires: resetMarkersDaily ? 1 : 999 });
+        $.cookie('removed-items-2', '', { expires: resetMarkersDaily ? 1 : 999 });
 
-        disableMarkers =  $.cookie('removed-items').split('');
+        disableMarkers = $.cookie('removed-items').split('');
         $("#reset-markers").val('false');
         Menu.refreshItemsCounter();
     }
@@ -266,12 +260,10 @@ $("#reset-markers").on("change", function()
     Map.removeCollectedMarkers();
 });
 
-$("#custom-routes").on("change", function()
-{
+$("#custom-routes").on("change", function() {
     var temp = $("#custom-routes").val();
     customRouteEnabled = temp == '1';
-    if(temp == 'clear')
-    {
+    if (temp == 'clear') {
         customRouteConnections = [];
         baseMap.removeLayer(polylines);
         customRouteEnabled = true;
@@ -283,15 +275,13 @@ $("#custom-routes").on("change", function()
 
 });
 
-$('#show-coordinates').on('change', function()
-{
+$('#show-coordinates').on('change', function() {
     showCoordinates = $('#show-coordinates').val() == '1';
 
     changeCursor();
 });
 
-$("#language").on("change", function()
-{
+$("#language").on("change", function() {
     lang = $("#language").val();
     $.cookie('language', lang, { expires: 999 });
     Language.setMenuLanguage();
@@ -301,23 +291,19 @@ $("#language").on("change", function()
     Menu.refreshMenu();
 });
 
-$('.menu-option.clickable').on('click', function ()
-{
+$('.menu-option.clickable').on('click', function() {
     var menu = $(this);
     menu.children('span').toggleClass('disabled');
 
-    if(menu.children('span').hasClass('disabled'))
-    {
+    if (menu.children('span').hasClass('disabled')) {
         enabledTypes = $.grep(enabledTypes, function(value) {
             return value != menu.data('type');
         });
-    }
-    else
-    {
+    } else {
         enabledTypes.push(menu.data('type'));
     }
     Map.addMarkers();
-    if($("#routes").val() == 1)
+    if ($("#routes").val() == 1)
         Map.drawLines();
 });
 
@@ -327,26 +313,22 @@ $('.open-submenu').on('click', function(e) {
     $(this).parent().parent().children('.menu-hidden').toggleClass('opened');
 });
 
-$(document).on('click', '.collectible', function(){
+$(document).on('click', '.collectible', function() {
     var collectible = $(this);
     collectible.toggleClass('disabled');
 
     Map.removeItemFromMap(collectible.data('type'));
 
-    if($("#routes").val() == 1)
+    if ($("#routes").val() == 1)
         Map.drawLines();
 });
 
-$('.menu-toggle').on('click', function()
-{
+$('.menu-toggle').on('click', function() {
     $('.side-menu').toggleClass('menu-opened');
 
-    if($('.side-menu').hasClass('menu-opened'))
-    {
+    if ($('.side-menu').hasClass('menu-opened')) {
         $('.menu-toggle').text('X');
-    }
-    else
-    {
+    } else {
         $('.menu-toggle').text('>');
     }
     $('.timer-container').toggleClass('timer-menu-opened');
@@ -354,36 +336,31 @@ $('.menu-toggle').on('click', function()
 
 });
 
-setInterval(function()
-{
+setInterval(function() {
     var nextGMTMidnight = new Date();
     nextGMTMidnight.setUTCHours(24);
     nextGMTMidnight.setUTCMinutes(0);
     nextGMTMidnight.setUTCSeconds(0);
     var countdownDate = nextGMTMidnight - new Date();
-    if(countdownDate <= 0)
-    {
+    if (countdownDate <= 0) {
         $('#countdown').text('00:00:00');
-    }
-    else
-    {
+    } else {
         var hours = Math.floor((countdownDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         var minutes = Math.floor((countdownDate % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((countdownDate % (1000 * 60)) / 1000);
 
-        $('#countdown').text(addZeroToNumber(hours)+':'+addZeroToNumber(minutes)+':'+addZeroToNumber(seconds));
+        $('#countdown').text(addZeroToNumber(hours) + ':' + addZeroToNumber(minutes) + ':' + addZeroToNumber(seconds));
 
-        if(getVirtual(new Date()).getHours() >= 22 || getVirtual(new Date()).getHours() < 5)
+        if (getVirtual(new Date()).getHours() >= 22 || getVirtual(new Date()).getHours() < 5)
             $('#day-cycle').css('background', 'url(assets/images/moon.png)');
         else
             $('#day-cycle').css('background', 'url(assets/images/sun.png)');
     }
 }, 1000);
 
-function addZeroToNumber(number)
-{
-    if(number < 10)
-        number = '0'+number.toString();
+function addZeroToNumber(number) {
+    if (number < 10)
+        number = '0' + number.toString();
     return number;
 }
 
@@ -394,8 +371,8 @@ function addZeroToNumber(number)
 var virtualOrigin = Date.parse("2019-08-15T06:00:00Z"),
     realOrigin = Date.parse("2019-08-15T14:36:00Z"),
     factor = 30;
-function getVirtual(time)
-{
+
+function getVirtual(time) {
     var now = new Date(virtualOrigin + (time - realOrigin) * factor);
     return new Date(now.getTime() + now.getTimezoneOffset() * 60000);
 }
