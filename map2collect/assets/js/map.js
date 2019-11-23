@@ -434,24 +434,22 @@ Map.drawLines = function() {
     var connections = [];
     $.each(routesData[day], function(nodeKey, nodeValue) {
 
-            var marker = markers.filter(item => {
-                if (item.day == day)
-                    return item.text === nodeValue.key;
-            })[0]; //Need this 0 because its an array with 1 element
+        var marker = markers.filter(item => {
+            if (item.day == day)
+                return item.text === nodeValue.key;
+        })[0]; //Need this 0 because its an array with 1 element
 
-            var toolType = '3'; //All type of tools
-            toolType = $("#tools").val();
-            if (marker.text == nodeValue.key && marker.day == day && !disableMarkers.includes(nodeValue.key) && enabledTypes.includes(marker.icon) &&
-                parseInt(toolType) < parseInt(marker.tool) && toolType !== "3")) {
+        if (marker.text == nodeValue.key && marker.day == day && !disableMarkers.includes(nodeValue.key) && enabledTypes.includes(marker.icon) &&
+            (parseInt(toolType) < parseInt(marker.tool) && toolType !== "3")) {
             var connection = [marker.x, marker.y];
             connections.push(connection);
         }
     });
 
-if (polylines instanceof L.Polyline) {
-    baseMap.removeLayer(polylines);
-}
+    if (polylines instanceof L.Polyline) {
+        baseMap.removeLayer(polylines);
+    }
 
-polylines = L.polyline(connections, { 'color': '#9a3033' });
-baseMap.addLayer(polylines);
+    polylines = L.polyline(connections, { 'color': '#9a3033' });
+    baseMap.addLayer(polylines);
 };
